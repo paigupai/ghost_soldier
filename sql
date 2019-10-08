@@ -1,0 +1,1 @@
+CREATE TABLE "gohstSoldier" ( "date" dateTIME NOT NULL, "name" TEXT NOT NULL, "clicks" INTEGER, "clisksIncrease" INTEGER, "totalDanmaku" INTEGER, "danmakuIncrease" INTEGER, "totalRating" INTEGER, "ratingIncrease" INTEGER, "onlineCount" INTEGER, PRIMARY KEY("date","name") )
