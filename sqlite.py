@@ -5,7 +5,7 @@ import sqlite3
 
 con = sqlite3.connect('smzdm.sqlite')
 cur = con.cursor()
-cur.execute('CREATE TABLE novel ("novel_name" TEXT,"title" TEXT);')
+cur.execute('CREATE TABLE IF NOT EXISTS novel ("novel_name" TEXT,"title" TEXT);')
 sql = "insert into novel(novel_name,title) values(?,?)"
 # 写网站站点
 url = "http://www.jingcaiyuedu.com/novel/GLSmM4.html"
