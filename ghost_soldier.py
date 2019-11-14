@@ -23,8 +23,8 @@ aill = re.findall(r'href="(.*?)">(.*?)<',dl)
 f = open(f"{title}.txt",'w',encoding="utf-8")
 # 循环每一个章节,分别去下载
 for i in aill:
-#反爬
-time.sleep(1)
+# 反爬
+ time.sleep(1)
 # 章节地址和名
  book_url,book_name = i
 # 正确章节地址http://www.jingcaiyuedu.com/novel/GLSmM4/1.html
