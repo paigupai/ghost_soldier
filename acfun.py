@@ -46,7 +46,7 @@ for episodeURL in urlList:
 # 反爬
  #time.sleep(1)
  # 拼接正确地址
- episode_url = "https://www.acfun.cn" + episodeURL
+ episode_url = "https://www.acfun.cn%s"%episodeURL
  print(episode_url)
 # 获取章节
  episode_response = requests.get(episode_url,headers=headers)
