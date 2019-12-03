@@ -49,7 +49,7 @@ for area in tokyo_area_list:
    #layout
    layout = get_layout(site_url)
    message ="%s,%s,%s,%s,%s,%s,%s" %(date["name"],date["skcs"],date["roomCount"],money,layout,station,site_url)
-   #print(message)
+   print(message)
    file.write(message+"\n")
    #print(date["name"])
   #print(date)
