@@ -1,6 +1,7 @@
 import requests
 import json
-import datetime
+from datetime import datetime, timedelta, timezone
+from bs4 import BeautifulSoup
 #东京地区
 tokyo_area_list = ["01","02","03","04","05","06"]
 
@@ -18,17 +19,19 @@ headers = {
     'Accept-Encoding': "gzip, deflate, br",
     'Accept-Language': "ja,en-US;q=0.9,en;q=0.8",
     'Cache-Control': "no-cache",
-    'Postman-Token': "1a47a8db-cfb2-4a18-8c40-141c4bca9b7f,ed6f316a-c5ec-4066-94d5-c80c820766d7",
     'Host': "chintai.sumai.ur-net.go.jp",
     'Content-Length': "69",
     'cache-control': "no-cache"
     }
-date = datetime.datetime.now()
-title = date.strftime('%Y-%m-%d-%H-%M-%S')+"_東京.csv"
+# タイムゾーンの生成
+JST = timezone(timedelta(hours=+9), 'JST')
+# GOOD, タイムゾーンを指定している
+date = datetime.now(JST)
+title = date.strftime('%Y-%m-%d-%H-%M-%S')+"_東京"
 print(title)
 file = open(f"{title}.csv",'w',encoding="utf-8")
 #with open(title, "w",encoding="utf-8") as file:
-file.write("物件名,地域,対象空室数,家賃(共益費),最寄駅,URL\n")
+file.write("物件名,地域,対象空室数,家賃(共益費),間取り/床面積,最寄駅,URL\n")
 for area in tokyo_area_list:
  print(area)
  payload = "rent_low=&rent_high=&floorspace_low=&floorspace_high=&tdfk=13&area=%s"%(area)
@@ -40,12 +43,38 @@ for area in tokyo_area_list:
  for date in json_array:
   if date["roomCount"] > 0:
    #清洗数据
-   station = date["access"].replace('<br>',' ')
+   station = date["access"].replace('<br>','/')
    site_url = "https://www.ur-net.go.jp/%s"%(date["bukkenUrl"])
    money = (date["rent"]+date["commonfee"]).replace(',','')
-   message ="%s,%s,%s,%s,%s,%s" %(date["name"],date["skcs"],date["roomCount"],money,station,site_url)
-   print(message)
+   #layout
+   layout = get_layout(site_url)
+   message ="%s,%s,%s,%s,%s,%s,%s" %(date["name"],date["skcs"],date["roomCount"],money,layout,station,site_url)
+   #print(message)
    file.write(message+"\n")
-   print(date["name"])
+   #print(date["name"])
   #print(date)
  #print(json_data)
+
+
+ def get_layout(url):
+     headers = {
+     'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+     'Accept': "*/*",
+     'Cache-Control': "no-cache",
+     'Host': "www.ur-net.go.jp",
+     'Accept-Encoding': "gzip, deflate",
+     'Connection': "keep-alive",
+     'cache-control': "no-cache"
+     }
+     response = requests.request("GET", url, headers=headers)
+     # 将网页编码方式转换为utf-8
+     response.encoding = 'utf-8'
+     # 网站源码
+     html = response.text
+     # lxml化
+     soup = BeautifulSoup(html,'lxml')
+     # 間取り/床面積
+     layout_data = soup.find('div',class_='article_sliders_table').find_all('td')
+     layout = layout_data[1].find('p').string
+     #print(layout)
+     return layout

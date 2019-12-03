@@ -1,5 +1,5 @@
 # ghost_soldier
-acfun
+acfun  
 https://www.acfun.cn/bangumi/aa6000218   
 levtech  
 レバテック 爬虫  
