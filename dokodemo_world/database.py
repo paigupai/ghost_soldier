@@ -16,6 +16,7 @@ def insert_db(id,name):
     con.commit()
     print("保存成功")
 
+
 def update_chinese_name(id,name):
     update_chinese_name_sql = "update product set chinese_name = ? where product_id = ?;"
     print("更新产品中文名:%s"%name)
