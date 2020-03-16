@@ -1,16 +1,11 @@
 import requests
 import time
 import datetime
-import sqlite3
 import re #正则表达式
 from bs4 import BeautifulSoup
+import levtechDao
 
-con = sqlite3.connect('levtech.sqlite')
-cur = con.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS search_count( "date" dateTIME NOT NULL, "total" INTEGER NOT NULL, PRIMARY KEY("date") ) ;')
-cur.execute('CREATE TABLE IF NOT EXISTS market_facilitation_index( "date" dateTIME NOT NULL, "language" TEXT NOT NULL, "languageCount" INTEGER, PRIMARY KEY("date","language") ) ;')
-total_sql = "insert into search_count(date,total) values(?,?)"
-language_sql = "insert into market_facilitation_index(date,language,languageCount) values(?,?,?)"
+levtechDao.create_db()
 # 写网站站点
 url = "https://freelance.levtech.jp/"
 # 写入headers模拟浏览器上网,避免出现个别网站拒绝访问的情况
@@ -30,8 +25,7 @@ print(total)
 # 现在时间
 date = datetime.datetime.now()
 print("存储案件总数为%s"%total)
-cur.execute(total_sql, [date,total])
-con.commit()
+levtechDao.insert_total(date,total)
 print("存储成功")
 # data
 data = soup.find(class_='searchTab__body')
@@ -43,6 +37,5 @@ for i in range(len(linkArrow)):
  language = linkArrow[i].string
  languageCount = int(searchLinkList__item__sub[i].string.replace('(', '').replace('件)', '')) 
  print("语言：%s\n案件数：%s"% (language,str(languageCount)))
- cur.execute(language_sql, [date,language,languageCount])
- con.commit()
+ levtechDao.insert_language(date,language,languageCount)
 print("存储成功")
