@@ -3,6 +3,7 @@ import requests
 import time
 import re #正则表达式
 # 写网站站点
+
 url = "http://www.jingcaiyuedu.com/novel/GLSmM4.html"
 # 写入headers模拟浏览器上网,避免出现个别网站拒绝访问的情况
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",}
