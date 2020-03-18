@@ -3,9 +3,9 @@ import time
 import datetime
 import re #正则表达式
 from bs4 import BeautifulSoup
-import levtechDao
+import levtechDB
 
-levtechDao.create_db()
+levtechDB.create_db()
 # 写网站站点
 url = "https://freelance.levtech.jp/"
 # 写入headers模拟浏览器上网,避免出现个别网站拒绝访问的情况
@@ -25,7 +25,7 @@ print(total)
 # 现在时间
 date = datetime.datetime.now()
 print("存储案件总数为%s"%total)
-levtechDao.insert_total(date,total)
+levtechDB.insert_total(date,total)
 print("存储成功")
 # data
 data = soup.find(class_='searchTab__body')
@@ -37,5 +37,5 @@ for i in range(len(linkArrow)):
  language = linkArrow[i].string
  languageCount = int(searchLinkList__item__sub[i].string.replace('(', '').replace('件)', '')) 
  print("语言：%s\n案件数：%s"% (language,str(languageCount)))
- levtechDao.insert_language(date,language,languageCount)
+ levtechDB.insert_language(date,language,languageCount)
 print("存储成功")
