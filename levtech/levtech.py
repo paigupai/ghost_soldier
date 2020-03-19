@@ -1,6 +1,6 @@
 import requests
 import time
-import datetime
+from datetime import datetime, timedelta, timezone
 import re #正则表达式
 from bs4 import BeautifulSoup
 import levtechDB
@@ -22,8 +22,10 @@ soup = BeautifulSoup(html,'lxml')
 total = int(soup.find(id="topSearchCount").string)
 # 打印片名
 print(total)
+# タイムゾーンの生成
+JST = timezone(timedelta(hours=+9), 'JST')
 # 现在时间
-date = datetime.datetime.now()
+date = datetime.now(JST)
 print("存储案件总数为%s"%total)
 levtechDB.insert_total(date,total)
 print("存储成功")
